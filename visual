@@ -1,0 +1,59 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+# Set Seaborn style
+sns.set(style="darkgrid")
+
+# Example: Simulated Data
+# Replace these with your actual data
+episodes = np.arange(1, 101)  # Episode numbers
+rewards = np.random.uniform(0, 100, size=100)  # Rewards for each episode
+losses = np.random.uniform(0.1, 10, size=100)  # Loss values for each episode
+moving_avg_rewards = np.convolve(rewards, np.ones(10)/10, mode='valid')  # Moving average of rewards
+
+# 1. Plot Rewards Per Episode
+plt.figure(figsize=(10, 6))
+plt.plot(episodes, rewards, label="Rewards", color="blue", alpha=0.6)
+plt.plot(episodes[:len(moving_avg_rewards)], moving_avg_rewards, label="Moving Avg (10 episodes)", color="red", linewidth=2)
+plt.title("Episode Rewards Over Time")
+plt.xlabel("Episodes")
+plt.ylabel("Rewards")
+plt.legend()
+plt.show()
+
+# 2. Plot Loss Per Episode
+plt.figure(figsize=(10, 6))
+plt.plot(episodes, losses, label="Loss", color="green", alpha=0.7)
+plt.title("Loss Per Episode")
+plt.xlabel("Episodes")
+plt.ylabel("Loss")
+plt.legend()
+plt.show()
+
+# 3. Jointplot for Reward and Loss
+data = {"Rewards": rewards, "Losses": losses}
+sns.jointplot(x="Rewards", y="Losses", data=data, kind="scatter", height=8, ratio=4, space=0.5)
+plt.suptitle("Relationship Between Rewards and Losses", y=1.02)
+plt.show()
+
+# 4. Histogram of Rewards
+plt.figure(figsize=(10, 6))
+sns.histplot(rewards, bins=20, kde=True, color="blue", alpha=0.7)
+plt.title("Reward Distribution")
+plt.xlabel("Rewards")
+plt.ylabel("Frequency")
+plt.show()
+
+# 5. Heatmap for Correlation (if multiple metrics exist)
+import pandas as pd
+metrics = pd.DataFrame({
+    "Rewards": rewards,
+    "Losses": losses,
+    "Episodes": episodes
+})
+corr = metrics.corr()
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Correlation Between Metrics")
+plt.show()
